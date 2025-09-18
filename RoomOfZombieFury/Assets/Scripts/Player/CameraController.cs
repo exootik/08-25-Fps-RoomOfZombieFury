@@ -21,10 +21,13 @@ public class CameraController : MonoBehaviour
     {
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+        LoadSettings();
     }
 
     void Update()
     {
+        
+
         float mouseX = Input.GetAxis("Mouse X") * sensibility;
         float mouseY = Input.GetAxis("Mouse Y") * sensibility;
 
@@ -33,9 +36,19 @@ public class CameraController : MonoBehaviour
         rotationX -= mouseY;
         rotationX = Mathf.Clamp(rotationX, minXAngle, maxXAngle);
 
-        Quaternion targetRotation = Quaternion.Euler(rotationX, rotationY, 0);
+        playerTransform.Rotate(Vector3.up * mouseX);
+        transform.localRotation = Quaternion.Euler(rotationX, 0f, 0f);
+    }
 
-        playerTransform.rotation = Quaternion.Slerp(playerTransform.rotation, targetRotation, smoothSpeed * Time.deltaTime);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, smoothSpeed * Time.deltaTime);
+    void LoadSettings()
+    {
+        if (PlayerPrefs.HasKey("SmoothSpeed"))
+        {
+            smoothSpeed = PlayerPrefs.GetFloat("SmoothSpeed");
+        }
+        if (PlayerPrefs.HasKey("Sensibility"))
+        {
+            sensibility = PlayerPrefs.GetFloat("Sensibility");
+        }
     }
 }

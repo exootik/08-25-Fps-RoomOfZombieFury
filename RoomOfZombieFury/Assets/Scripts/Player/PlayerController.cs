@@ -12,11 +12,13 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private AudioSource footstepSound;
 
     [Header("Player Health & Damage")]
-    public int maxHealth = 10;
+    public int maxHealth = 100;
     public int currentHealth;
+    public Slider healthSlider;
     public Image damagePanel;
     public float flashAlpha = 0.5f;
     public float fadeDuration = 1f;
+    public DeathScreen deathScreen;
 
     [Header("Movement Settings")]
     [SerializeField] private float moveSpeed = 10f;
@@ -64,7 +66,7 @@ public class PlayerController : MonoBehaviour
     private float turnInput;
     //private float mouseX;
     //private float mouseY;
-    private float escape;
+    //private float escape;
 
     private void Start()
     {
@@ -73,6 +75,9 @@ public class PlayerController : MonoBehaviour
         //noiseComponent = virtualCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
 
         currentHealth = maxHealth;
+        healthSlider.value = currentHealth;
+        healthSlider.minValue = 1;
+        healthSlider.maxValue = currentHealth;
     }
 
     private void Update()
@@ -82,16 +87,16 @@ public class PlayerController : MonoBehaviour
 
         PlayFootstepSound();
 
-        if (escape != 0)
-        {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
+        //if (escape != 0)
+        //{
+        //    Cursor.lockState = CursorLockMode.None;
+        //    Cursor.visible = true;
+        //}
+        //else
+        //{
+        //    Cursor.lockState = CursorLockMode.Locked;
+        //    Cursor.visible = false;
+        //}
     }
 
     private void LateUpdate()
@@ -255,15 +260,17 @@ public class PlayerController : MonoBehaviour
         turnInput = Input.GetAxis("Horizontal");
         //mouseX = Input.GetAxis("Mouse X");
         //mouseY = Input.GetAxis("Mouse Y");
-        escape = Input.GetAxis("Cancel");
+        //escape = Input.GetAxis("Cancel");
     }
 
     public void TakeDamage(int damageAmount)
     {
         currentHealth -= damageAmount;
+        healthSlider.value -= damageAmount;
         StopCoroutine("FlashRoutine");
         StartCoroutine("FlashRoutine");
 
+        
         if (currentHealth <= 0)
         {
             Die();
@@ -272,8 +279,7 @@ public class PlayerController : MonoBehaviour
 
     private void Die()
     {
-        Debug.Log("Player mort");
-        Destroy(gameObject);
+        deathScreen.showDeadScreen = true;
     }
 
     private IEnumerator FlashRoutine()

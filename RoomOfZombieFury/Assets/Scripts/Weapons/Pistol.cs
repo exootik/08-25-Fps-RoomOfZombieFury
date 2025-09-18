@@ -44,7 +44,7 @@ public class Pistol : Gun
     private IEnumerator BulletFire(Vector3 target, RaycastHit hit)
     {
         GameObject bulletTrail = Instantiate(gunData.bulletTrailPrefab, gunMuzzle.position, Quaternion.identity);
-
+        
         while (bulletTrail != null && Vector3.Distance(bulletTrail.transform.position, target) > 0.1f)
         {
             bulletTrail.transform.position = Vector3.MoveTowards(bulletTrail.transform.position, target, Time.deltaTime * gunData.bulletSpeed);
@@ -64,6 +64,9 @@ public class Pistol : Gun
                 if (enemy != null)
                 {
                     enemy.TakeDamage(gunData.shootDamage);
+
+                    ParticleSystem blood = Instantiate(zombieBloodEffect, hit.point, Quaternion.LookRotation(hit.normal));
+                    Destroy(blood.gameObject, blood.main.duration);
                 }
             }
         }

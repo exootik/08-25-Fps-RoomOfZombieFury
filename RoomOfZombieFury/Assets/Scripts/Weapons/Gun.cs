@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public abstract class Gun : MonoBehaviour
 {
@@ -8,11 +9,14 @@ public abstract class Gun : MonoBehaviour
     public GunData gunData;
     public Transform gunMuzzle;
     public Animator animator;
-    public GameObject bulletHolePrefab; 
+    public GameObject bulletHolePrefab;
+    public ParticleSystem muzzleFlash;
+    public ParticleSystem zombieBloodEffect;
     //public GameObject bulletHitParticlePrefab;
     public AudioSource audioSource;
     public PlayerController playerController;
     public Transform cameraTransform;
+    public Text currentAmmoText;
 
     private float currentAmmo = 0f;
     private float nextTimeToFire = 0f;
@@ -63,6 +67,7 @@ public abstract class Gun : MonoBehaviour
         yield return new WaitForSeconds(gunData.reloadTime);
 
         currentAmmo = gunData.magazineSize;
+        currentAmmoText.text = currentAmmo.ToString();
         animator.SetBool("IsEmpty", false);
         animator.SetBool("LastBullet", false);
         isReloading = false;
@@ -87,7 +92,7 @@ public abstract class Gun : MonoBehaviour
         {
             animator.SetBool("LastBullet", true);
         }
-
+            
 
         nextTimeToFire = Time.time + (1 / gunData.fireRate);
         HandleShoot();
@@ -98,11 +103,13 @@ public abstract class Gun : MonoBehaviour
     {
         animator.SetTrigger("Shoot");
         currentAmmo--;
+        currentAmmoText.text = currentAmmo.ToString();
         Debug.Log(gunData.gunName + " Shot! , Bullets left : " + currentAmmo);
-        
+
         // playerController.ApplyAimRecoil(gunData);
         // ApplyDirectionalRecoil();
 
+        muzzleFlash.Play();
         PlayFireSound();
         Shoot();
     }

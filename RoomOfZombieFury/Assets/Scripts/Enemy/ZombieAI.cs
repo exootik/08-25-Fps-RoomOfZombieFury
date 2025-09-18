@@ -14,9 +14,8 @@ public class ZombieAI : MonoBehaviour
     public float attackDistance = 2f;
     public float attackCooldown = 2f;
     public float attackDelay = 1.5f;
-    public int damage = 1;
-    public int health = 5;
-    public int maxHealth = 5;
+    public int damage = 10;
+    public int maxHealth = 50;
     public int currentHealth;
 
     private CapsuleCollider capsuleCollider;
@@ -75,6 +74,7 @@ public class ZombieAI : MonoBehaviour
                 navAgent.enabled = false;
                 capsuleCollider.enabled = false;
                 enabled = false;
+                GameManager.Instance.currentScore += 1;
                 break;
         }
     }
@@ -99,10 +99,10 @@ public class ZombieAI : MonoBehaviour
         if (currentState == ZombieState.Dead)
             return;
 
-        health -= damageAmount;
-        if (health <= 0)
+        currentHealth -= damageAmount;
+        if (currentHealth <= 0)
         {
-            health = 0;
+            currentHealth = 0;
             Die();
         }
     }

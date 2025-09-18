@@ -16,9 +16,9 @@ MonoBehaviour:
   targetLayerMask:
     serializedVersion: 2
     m_Bits: 64
-  shootingRange: 100
+  shootingRange: 200
   fireRate: 1.5
-  shootDamage: 1
+  shootDamage: 10
   magazineSize: 10
   reloadTime: 2.6
   bulletTrailPrefab: {fileID: 9171162945967913050, guid: c7b4d0a492f7c674a93270b37806408f, type: 3}
